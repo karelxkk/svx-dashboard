@@ -1,6 +1,5 @@
+# debian/watch
 version=4
-opts=mode=git,pgpmode=none,repacksuffix=+ds,\
-dversionmangle=s/^[0-9]+://,dversionmangle=s/-\d+$//,\
-filenamemangle=s#.*refs/tags/v?(\d[\d\.]+)#svx-dashboard-$1\.tar\.gz# \
+opts="mode=git,gitmode=full,pgpmode=gittag,dversionmangle=s/^[0-9]+://,dversionmangle=s/-\d+$//" \
 https://github.com/karelxkk/svx-dashboard.git \
 refs/tags/v?(\d[\d\.]+)
