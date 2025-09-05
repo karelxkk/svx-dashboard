@@ -1,0 +1,11 @@
+debian/extra/apache/svx-dashboard.conf                 etc/apache2/conf-available/
+debian/extra/nginx/svx-dashboard.locations             etc/nginx/snippets/
+debian/extra/systemd/svx-sse.service                   lib/systemd/system/
+debian/extra/systemd/svx-history-rotate.service        lib/systemd/system/
+debian/extra/systemd/svx-history-rotate.timer          lib/systemd/system/
+debian/extra/events.d/svx_backend.tcl                  etc/svxlink/events.d/
+debian/extra/events.d/EchoLink.tcl                     etc/svxlink/events.d/
+debian/extra/svx/index.html                            var/www/svx/
+debian/extra/svx/README.md                             var/www/svx/
+svx_sse.py                                             usr/bin/
+svx_history_rotate.sh                                  usr/sbin/

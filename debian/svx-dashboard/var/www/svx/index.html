@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>SVX Reflector – svx.ham-radio.cz</title>
+  <style>
+    :root{ --bg:#f6f7f9; --fg:#222; --muted:#6b7280; --bord:#d7dbe2; --card:#fff; --ok:#e8f6eb; --nodesMin:900px; }
+    *{ box-sizing:border-box }
+
+    /* Stránka se posouvá vodorovně pod 940px */
+    html,body{ margin:0; padding:0; background:var(--bg); color:var(--fg);
+      font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif;
+      overflow-x:auto; }
+    body{ min-width:0px }
+    .wrap{ width:min(100%,980px); max-width:980px; min-width:0; margin:16px auto; padding:0 }
+
+    h1{ font-size:18px; margin:8px 0 14px; text-align:center }
+    .topbar{ display:flex; align-items:center; gap:12px; flex-wrap:wrap; justify-content:space-between; margin:6px 0 10px }
+    .badge{ display:inline-block; padding:2px 8px; border-radius:999px; background:#e8eef8; color:#334155; font-weight:600 }
+    .muted{ color:var(--muted) }
+
+    .card{ background:var(--card); border:1px solid var(--bord); border-radius:0; box-shadow:0 1px 2px rgba(0,0,0,.04); overflow:visible }
+    .card-head{ padding:10px; border-bottom:1px solid var(--bord) }
+    .card-head h3{ margin:0; font-size:14px; color:#111 }
+    .card-body{ padding:0 }
+    /* vodorovný scroll pouze pro kartu Linky, ne pro celou stránku */
+    .scrollX{ overflow-x:auto; overflow-y:hidden }
+
+    .toolbar{ display:flex; gap:10px; align-items:center; justify-content:flex-end; padding:6px 10px }
+    .input{ border:1px solid var(--bord); border-radius:8px; padding:6px 10px; min-width:220px }
+
+    table{ width:100%; border-collapse:collapse; table-layout:fixed; font-variant-numeric:tabular-nums }
+    th,td{ padding:6px 10px; border-bottom:1px solid var(--bord); white-space:nowrap; text-overflow:ellipsis; overflow:hidden; text-align:left; line-height:1.35; vertical-align:middle }
+    thead th{ font-size:12px; letter-spacing:.02em; color:#111; background:#f4f6fa; border-bottom:1px solid var(--bord); }
+    /* čitelnější záhlaví tabulky Linky i při větší šířce okna */
+    #nodesTbl thead th{ padding:4px 6px; overflow:visible; text-overflow:clip }
+    tbody tr:hover{ background:#f0f4ff }
+    tbody tr.talking{ background:#fff3cd }
+    tbody tr.disc{ background:#fee2e2 }
+    tbody tr.conn{ background:var(--ok) }
+    .section{ margin:14px 0 }
+
+    /* Minimální bezpečné šířky */
+    #nodesTbl{ width:100%; min-width:var(--nodesMin); }
+    .histTbl{ min-width:250px; width:100% }
+
+    /* Šířky sloupců přes colgroup – záhlaví = tělo */
+    /* Linky */
+    #nodesTbl col.c1{ width:6ch }  /* Linka */  /* Linka */
+    #nodesTbl col.c2{ width:5ch }  /* Stav */  /* Stav */
+    #nodesTbl col.c3{ width:12ch } /* Připojeno/Odpojeno */
+    #nodesTbl col.c4{ width:4ch }  /* Skupina */
+    #nodesTbl col.c5{ width:3ch }  /* Hovor */  /* Hovor */
+    #nodesTbl col.c6{ width:12ch } /* Začátek */ /* Začátek */
+    #nodesTbl col.c7{ width:4ch }  /* Délka h. */
+    #nodesTbl col.c8{ width:12ch } /* Posl.aktivita */
+    #nodesTbl col.c9{ width:4ch }  /* Počet */  /* Počet */
+    /* Historie */
+    .histTbl col.c1{ width:18ch } /* Čas – více místa */
+    .histTbl col.c2{ width:10ch } /* Linka – užší */
+    .histTbl col.c3{ width:6ch }  /* Délka */
+    .histTbl col.c4{ width:6ch }
+
+    /* Záhlaví historie: neusekávat text ellipsou, lepší čitelnost při změně šířky */
+    .histTbl thead th{ overflow:visible; text-overflow:clip; padding:6px 10px }
+/* Vertikální linka mezi dvěma tabulkami historie (jen ve 2 sloupcích) */
+    .hist2col:not(.onecol)::before{ content:""; position:absolute; top:0; bottom:0; left:50%; width:1px; background:var(--bord); }
+
+/* Styl běžícího času vedle "živě" – stejné písmo/akcent */
+.liveinfo{ gap:8px }
+.timer{ font-weight:600; color:#334155 }
+.timer .timer-val{ font-variant-numeric:tabular-nums; font-feature-settings:"tnum" 1 }
+.timer .label{ opacity:.9 }
+
+  /* Skupina */
+
+    /* Zarovnání čísel doprava */
+    #nodesTbl th:nth-child(4), #nodesTbl td:nth-child(4),
+    #nodesTbl th:nth-child(7), #nodesTbl td:nth-child(7),
+    #nodesTbl th:nth-child(9), #nodesTbl td:nth-child(9){ text-align:right }
+    /* Hovor – puntík na střed sloupce */
+    #nodesTbl th:nth-child(5), #nodesTbl td:nth-child(5){ text-align:center }
+    .histTbl th:nth-child(3), .histTbl td:nth-child(3),
+    .histTbl th:nth-child(4), .histTbl td:nth-child(4){ text-align:right }
+
+    
+    .meta{ display:flex; gap:14px; align-items:center; flex-wrap:wrap }
+    .dot{ width:8px; height:8px; border-radius:50%; background:#16a34a; display:inline-block; margin-right:6px }
+    .dot.err{  background:#ef4444 }
+
+    /* centrovaná varovná lišta */
+    .hidden{display:none !important}
+    .notice{background:#fff7e6;border:1px solid #f6d48a;color:#7a5b00;padding:10px;border-radius:8px;margin:8px 0}
+    #warnBar{ text-align:center; display:flex; justify-content:center; align-items:center; gap:8px; flex-wrap:wrap }
+
+    .codebox{background:#f8fafc;border:1px solid var(--bord);border-radius:8px;padding:8px;overflow:auto;max-height:40vh;font-family:ui-monospace,SFMono-Regular,Consolas,Menlo,monospace;font-size:12px;white-space:pre-wrap}
+      /* Patička */
+    .footer{ margin:18px auto 10px; padding:12px 0; color:var(--muted); font-size:12px; text-align:center; border-top:1px solid var(--bord); max-width:800px; }
+      .footer a{color:inherit;text-decoration:none;border-bottom:1px solid var(--bord);padding-bottom:1px;outline:none;-webkit-tap-highlight-color:transparent}
+    .footer a:hover{text-decoration:none;border-bottom-color:#9aa3b2}
+.footer a:focus,.footer a:active{outline:none}
+.footer a:focus-visible{outline:none;box-shadow:none;border-bottom-color:#111}
+    .hist2col{ display:grid; gap:16px; align-items:start; grid-template-columns:1fr 1fr; position:relative; }
+    .hist2col.onecol{ grid-template-columns:1fr; /* one column mode */ }  /* 1 sloupec podle třídy */
+      /* Vertikální linka mezi sloupci historie (jen při 2 sloupcích) *//* History: let it shrink to viewport on narrow screens */
+
+@media (max-width:560px){ .hist2col{ grid-template-columns:1fr } }
+@media (max-width:420px){ .histTbl th, .histTbl td{ padding:3px 4px } }
+    @media (max-width:600px){ .historyCard{ width:calc(100vw - 12px); margin:0; } }
+    </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>SVX Reflector – svx.ham-radio.cz</h1>
+
+    <div class="topbar">
+      <div class="meta">
+        <span class="badge"><span class="dot"></span> živě</span>
+      </div>
+      <div class="meta liveinfo">
+        <span class="muted">Aktualizováno <span id="lastDate">-</span> před </span>
+        <span class="timer"><span id="liveAge" class="timer-val">-</span></span>
+        <span class="muted"> v <span id="lastTime">-</span></span>
+      </div>
+    </div>
+
+    
+
+    <!-- Varování pro moderní prohlížeče při dočasném výpadku SSE (UI zůstává) -->
+    <div id="warnBar" class="notice hidden">
+      Spojení je dočasně přerušené. Zobrazuji poslední známá data a čekám na obnovení komunikace…
+      <button id="reconnectBtn" class="input" type="button" style="cursor:pointer;margin-left:8px">Obnovit spojení</button>
+    </div>
+
+    <!-- Statický fallback pro prohlížeče bez JS -->
+    <noscript>
+      <div class="section card">
+        <div class="card-head"><h3>Statický režim (JS je zakázán)</h3></div>
+        <div class="card-body" style="padding:10px">
+          <div class="notice">Váš prohlížeč má vypnutý JavaScript. Pro živou aktualizaci povolte prosím JavaScript nebo použijte moderní prohlížeč.</div>
+          <p class="muted">Aktuální data:</p>
+          <p><strong>status.json</strong></p>
+          <object data="http://svx.ham-radio.cz/data/status.json" type="application/json" class="codebox">/data/status.json</object>
+          <p><strong>history.csv</strong></p>
+          <object data="http://svx.ham-radio.cz/data/history.csv" type="text/plain" class="codebox">/data/history.csv</object>
+          <form method="get" action=""><button class="input" type="submit" style="cursor:pointer">Obnovit stránku</button></form>
+        </div>
+      </div>
+    </noscript>
+
+    <!-- Fallback pro nepodporované SSE / staré prohlížeče -->
+    <div id="fallback" class="section card hidden">
+      <div class="card-head"><h3>Statický režim (bez živé komunikace)</h3></div>
+      <div class="card-body" style="padding:10px">
+        <div class="notice">Nepodařilo se navázat živé spojení. Zobrazuji poslední stažená data. Zkuste stránku obnovit nebo ověřit připojení.</div>
+        <div style="display:flex; gap:16px; flex-wrap:wrap">
+          <div style="flex:1; min-width:320px">
+            <p class="muted"><strong>status.json</strong> (raw)</p>
+            <pre id="fbStatus" class="codebox">–</pre>
+          </div>
+          <div style="flex:1; min-width:320px">
+            <p class="muted"><strong>history.csv</strong> (raw)</p>
+            <pre id="fbHistory" class="codebox">–</pre>
+          </div>
+        </div>
+        <div style="margin-top:10px">
+          <button id="fbRefresh" class="input" type="button" style="cursor:pointer">Obnovit data</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dynamic">
+      <!-- Linky -->
+      <div class="section card">
+        <div class="card-head"><h3>Linky</h3></div>
+        <div class="card-body scrollX">
+          <table id="nodesTbl">
+            <colgroup>
+              <col class="c1"><col class="c2"><col class="c3"><col class="c4"><col class="c5"><col class="c6"><col class="c7"><col class="c8"><col class="c9">
+            </colgroup>
+            <thead>
+              <tr>
+                <th>Linka</th>
+                <th>Stav</th>
+                <th>Připojeno/Odpojeno</th>
+                <th>Skupina</th>
+                <th>Hovor</th>
+                <th>Začátek</th>
+                <th>Délka h.</th>
+                <th>Posl.aktivita</th>
+                <th>Počet</th>
+              </tr>
+            </thead>
+            <tbody id="nodesBody"><tr><td class="muted" colspan="9">Žádná data</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Historie -->
+      <div class="section card historyCard">
+        <div class="card-head"><h3 id="histTitle">Historie</h3></div>
+        <div class="card-body">
+          <div id="histTables" class="hist2col" style="padding:10px">
+            <table class="histTbl">
+              <colgroup>
+                <col class="c1"><col class="c2"><col class="c3"><col class="c4">
+              </colgroup>
+              <thead>
+                <tr>
+                  <th>Čas</th>
+                  <th>Linka</th>
+                  <th>Délka</th>
+                  <th>Skupina</th>
+                </tr>
+              </thead>
+              <tbody id="histLeft"><tr><td class="muted" colspan="4">Žádná data</td></tr></tbody>
+            </table>
+            <table class="histTbl">
+              <colgroup>
+                <col class="c1"><col class="c2"><col class="c3"><col class="c4">
+              </colgroup>
+              <thead>
+                <tr>
+                  <th>Čas</th>
+                  <th>Linka</th>
+                  <th>Délka</th>
+                  <th>Skupina</th>
+                </tr>
+              </thead>
+              <tbody id="histRight"><tr><td class="muted" colspan="4">Žádná data</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div><!-- /#dynamic -->
+
+    <footer class="footer">© 2025 ok1lbc · <a href="https://svx.ham-radio.cz">svx.ham-radio.cz</a> reflector dashboard · <a href="mailto:ok1lbc@seznam.cz">ok1lbc@seznam.cz</a></footer>
+
+  </div>
+
+  <script>
+(function(){
+  var DATA_BASE='http://svx.ham-radio.cz/data';
+  var lastOkAt=0,lastStatusSeen=0,lastHistorySeen=0,snapshot=null,historyItems=[],redrawScheduled=false,liveOk=true,es=null;
+
+  function pickStartTs(it){
+    if(typeof it.start_ts==='number' && it.start_ts>0) return it.start_ts;
+    if(typeof it.end_ts==='number' && typeof it.dur==='number') return it.end_ts - it.dur;
+    return null;
+  }
+  function updateDot(){var dot=document.querySelector('.dot'); if(!dot) return; dot.classList.toggle('err',!liveOk);} 
+  function scheduleRedraw(){ if(redrawScheduled) return; redrawScheduled=true; requestAnimationFrame(function(){ redrawScheduled=false; renderAll(); }); }
+
+  function pad2(n){ return (n<10?'0':'')+n; }
+  function fmtDateTime(ts){ if(!ts) return '-'; var d=new Date(ts*1000); return d.toLocaleDateString('cs-CZ')+' v '+d.toLocaleTimeString('cs-CZ'); }
+  function fmtDate(ts){ if(!ts) return '-'; var d=new Date(ts*1000); return d.toLocaleDateString('cs-CZ'); }
+  function fmtTime(ts){ if(!ts) return '-'; var d=new Date(ts*1000); return d.toLocaleTimeString('cs-CZ'); }
+  function fmtDur(s){ if(s<=0) return '00:00'; var m=Math.floor(s/60),sec=Math.floor(s%60); if(m>=60){var h=Math.floor(m/60);m%=60;return h+':'+pad2(m)+':'+pad2(sec);} return pad2(m)+':'+pad2(sec);} 
+
+  function parseCsvLines(txt){
+    if(!txt) return [];
+    var lines=String(txt).split(/\r?\n/), out=[];
+    for(var i=0;i<lines.length;i++){
+      var s=lines[i]; if(!s) continue; if(s.charCodeAt(s.length-1)===13) s=s.slice(0,-1);
+      s=s.trim(); if(!s) continue;
+      var a=s.split(';'); if(a.length<4) continue;
+      var st=parseInt(a[0],10); if(!isFinite(st)) st=0;
+      var node=a[1]||'';
+      var tg=parseInt(a[2],10); if(!isFinite(tg)) tg=0;
+      var dur=parseInt(a[3],10); if(!isFinite(dur)) dur=0;
+      out.push({start_ts:st,node:node,tg:tg,dur:dur});
+    }
+    return out;
+  }
+
+  function tgArray(n){ var a=[]; var t=Number(n && n.tg || 0); if(t>0) a.push(t); if(n && Array.isArray(n.monitoredTGs)){ for(var i=0;i<n.monitoredTGs.length;i++){ var v=Number(n.monitoredTGs[i]); if(v>0 && a.indexOf(v)<0) a.push(v); } } return a; }
+
+  function recomputeLayout(){
+    var hist = document.getElementById('histTables');
+    var nodes = document.getElementById('nodesTbl');
+    if(!hist || !nodes) return;
+    // porovnáme skutečně potřebnou šířku tabulky Linky s dostupnou šířkou jejího kontejneru
+    var avail = (nodes.parentElement && nodes.parentElement.clientWidth) || document.documentElement.clientWidth;
+    var need  = nodes.scrollWidth; // zahrnuje i min-width z CSS
+    if (avail < need) hist.classList.add('onecol');
+    else              hist.classList.remove('onecol');
+  }
+
+  function renderNodes(){
+    var data=snapshot, body=document.getElementById('nodesBody'), buf=document.createElement('tbody');
+    if(!data||!data.nodes){ var tr=document.createElement('tr'),td=document.createElement('td'); td.colSpan=9; td.className='muted'; td.textContent='Žádná data'; tr.appendChild(td); buf.appendChild(tr); body.replaceWith(buf); buf.id='nodesBody'; return; }
+    var now=Math.floor(Date.now()/1000), keys=Object.keys(data.nodes).sort();
+    for(var i=0;i<keys.length;i++){
+      var k=keys[i], n=data.nodes[k]||{}, tgs=tgArray(n), tgDisp=tgs.length?tgs.join(', '):'-';
+      var tr=document.createElement('tr');
+      if(n.talk_active){ tr.classList.add('talking'); }
+      else if(!n.connected){ tr.classList.add('disc'); }
+      else { tr.classList.add('conn'); }
+      var td1=document.createElement('td'); td1.textContent=k; tr.appendChild(td1);
+      var td2=document.createElement('td'); td2.textContent=n.connected?'Připojen':'Odpojen'; tr.appendChild(td2);
+      var td3=document.createElement('td'); td3.textContent=n.connected?fmtDateTime(n.connected_since||0):fmtDateTime(n.disconnected_since||0); tr.appendChild(td3);
+      var td4=document.createElement('td'); td4.textContent=tgDisp; tr.appendChild(td4);
+      var td5=document.createElement('td'); td5.textContent=n.talk_active?'●':'-'; tr.appendChild(td5);
+      var td6=document.createElement('td'); td6.textContent=fmtDateTime(n.last_talk_start||0); tr.appendChild(td6);
+      var td7=document.createElement('td'); var dur=0; if(n.talk_active && n.last_talk_start) dur=now-n.last_talk_start; else if(!n.talk_active && n.talk_last_duration) dur=n.talk_last_duration; td7.textContent=fmtDur(dur); tr.appendChild(td7);
+      var td8=document.createElement('td'); td8.textContent=fmtDateTime(n.last_seen||0); tr.appendChild(td8);
+      var td9=document.createElement('td'); td9.textContent=n.talk_count||0; tr.appendChild(td9);
+      buf.appendChild(tr);
+    }
+    if(!buf.firstChild){ var tr0=document.createElement('tr'),td0=document.createElement('td'); td0.colSpan=9; td0.className='muted'; td0.textContent='Žádná data'; tr0.appendChild(td0); buf.appendChild(tr0); }
+    body.replaceWith(buf); buf.id='nodesBody';
+  }
+
+  function renderHistory(){
+    var items=historyItems||[], list=[];
+    for(var i=items.length-1;i>=0;i--){ list.push(items[i]); }
+    var leftCnt=Math.ceil(list.length/2);
+    fillHist('histLeft', list.slice(0,leftCnt));
+    fillHist('histRight', list.slice(leftCnt));
+    var ht=document.getElementById('histTitle'); if(ht){ ht.textContent='Historie (posledních '+list.length+')'; }
+  }
+
+  function fillHist(id, arr){
+    var body=document.getElementById(id), buf=document.createElement('tbody');
+    if(!body) return;
+    if(!arr || arr.length===0){
+      var tr=document.createElement('tr'),td=document.createElement('td'); td.colSpan=4; td.className='muted'; td.textContent='Žádná data'; tr.appendChild(td); buf.appendChild(tr);
+    } else {
+      for(var i=0;i<arr.length;i++){
+        var it=arr[i], tr=document.createElement('tr');
+        var td1=document.createElement('td'); var st=pickStartTs(it); td1.textContent=fmtDateTime(st||0); tr.appendChild(td1);
+        var td2=document.createElement('td'); td2.textContent=it.node||'-'; tr.appendChild(td2);
+        var td3=document.createElement('td'); td3.textContent=fmtDur(it.dur||0); tr.appendChild(td3);
+        var td4=document.createElement('td'); td4.textContent=it.tg||0; tr.appendChild(td4);
+        buf.appendChild(tr);
+      }
+    }
+    body.replaceWith(buf); buf.id=id;
+  }
+
+  function renderAll(){ renderNodes(); renderHistory(); recomputeLayout(); }
+
+  function fmtElapsed(sec){
+    sec=Math.max(0,Math.floor(sec));
+    var s=sec%60, m=Math.floor(sec/60)%60, h=Math.floor(sec/3600)%24, d=Math.floor(sec/86400);
+    var out=[]; if(d>0) out.push(d+' d'); if(h>0||d>0) out.push(h+' h'); if(m>0||h>0||d>0) out.push(pad2(m)+' min'); out.push(pad2(s)+' s'); return out.join(' ');
+  }
+
+  function updateLiveAge(){
+    var ageEl=document.getElementById('liveAge'), dEl=document.getElementById('lastDate'), tEl=document.getElementById('lastTime');
+    if(!lastOkAt){ if(ageEl) ageEl.textContent='-'; if(dEl) dEl.textContent='-'; if(tEl) tEl.textContent='-'; return; }
+    var sec=Math.max(0, Math.floor(Date.now()/1000)-lastOkAt);
+    if(ageEl) ageEl.textContent=fmtElapsed(sec);
+    if(dEl) dEl.textContent=fmtDate(lastOkAt);
+    if(tEl) tEl.textContent=fmtTime(lastOkAt);
+    updateDot();
+  }
+setInterval(updateLiveAge,1000);
+
+  function onStatus(data){ snapshot=data; lastStatusSeen=Math.floor(Date.now()/1000); lastOkAt=lastStatusSeen; liveOk=true; updateDot(); scheduleRedraw(); updateLiveAge(); }
+  function onHistory(arr){ historyItems=Array.isArray(arr)?arr.slice():[]; lastHistorySeen=Math.floor(Date.now()/1000); lastOkAt=lastHistorySeen; liveOk=true; updateDot(); scheduleRedraw(); updateLiveAge(); }
+
+  function connectSSE(){
+    try{
+      if(es){ try{ es.close(); }catch(e){} es=null; }
+      es=new EventSource('/events');
+      es.addEventListener('status', function(ev){ try{ onStatus(JSON.parse(ev.data)); }catch(e){} });
+      es.addEventListener('history', function(ev){ try{ onHistory(JSON.parse(ev.data)); }catch(e){} });
+      es.onopen=function(){ liveOk=true; updateDot(); hideFallback(); hideWarn(); };
+      es.onerror=function(){ liveOk=false; updateDot(); showWarn(); };
+    }catch(e){ liveOk=false; updateDot(); showWarn(); }
+  }
+
+  function initSSE(){
+    if(!('EventSource' in window)){ liveOk=false; updateDot(); showFallback(); fallbackReload(); return; }
+    connectSSE();
+  }
+
+  function firstLoad(){
+    fetch(DATA_BASE+'/status.json?t='+Date.now(),{cache:'no-store'})
+      .then(function(r){return r.ok?r.text():Promise.reject();})
+      .then(function(txt){ try{ onStatus(JSON.parse(txt||'{}')); }catch(e){} });
+    fetch(DATA_BASE+'/history.csv?t='+Date.now(),{cache:'no-store'})
+      .then(function(r){return r.ok?r.text():Promise.reject();})
+      .then(function(txt){ var items=parseCsvLines(txt); onHistory(items); });
+  }
+  function setText(id, txt){ var el=document.getElementById(id); if(el) el.textContent = txt==null?'':String(txt); }
+  function showWarn(){ var w=document.getElementById('warnBar'); if(w) w.classList.remove('hidden'); }
+  function hideWarn(){ var w=document.getElementById('warnBar'); if(w) w.classList.add('hidden'); }
+  function showFallback(){ var d=document.getElementById('dynamic'); var f=document.getElementById('fallback'); if(d) d.classList.add('hidden'); if(f) f.classList.remove('hidden'); }
+  function hideFallback(){ var d=document.getElementById('dynamic'); var f=document.getElementById('fallback'); if(f) f.classList.add('hidden'); if(d) d.classList.remove('hidden'); }
+  function fallbackReload(){
+    fetch(DATA_BASE+'/status.json?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){ setText('fbStatus', t||''); });
+    fetch(DATA_BASE+'/history.csv?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){ setText('fbHistory', t||''); });
+  }
+  var fbBtn=document.getElementById('fbRefresh'); if(fbBtn){ fbBtn.addEventListener('click', fallbackReload); }
+  var rcBtn=document.getElementById('reconnectBtn'); if(rcBtn){ rcBtn.addEventListener('click', function(){ connectSSE(); }); }
+
+  firstLoad();
+  initSSE();
+  // inicializace layoutu + reakce na změny okna
+  recomputeLayout();
+var _rs=false;
+function onResize(){ if(_rs) return; _rs=true; requestAnimationFrame(function(){ _rs=false; recomputeLayout(); }); }
+window.addEventListener('resize', onResize);
+})();
+</script>
+</body>
+</html>
