@@ -1,4 +1,6 @@
 version=4
-# Fill in your upstream release URL here
-# opts=filenamemangle=s/.+\/v?([\d\.]+)\.tar\.gz/svx-dashboard-$1\.tar\.gz/ \
-#  https://example.org/svx-dashboard/releases .*/v?([\d\.]+)\.tar\.gz
+opts=mode=git,pgpmode=none,repacksuffix=+ds,\
+dversionmangle=s/^[0-9]+://,dversionmangle=s/-\d+$//,\
+filenamemangle=s#.*refs/tags/v?(\d[\d\.]+)#svx-dashboard-$1\.tar\.gz# \
+https://github.com/karelxkk/svx-dashboard.git \
+refs/tags/v?(\d[\d\.]+)

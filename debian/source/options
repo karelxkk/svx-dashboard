@@ -1,0 +1,1 @@
+extend-diff-ignore = "(^|/)(\.git.*|.*~|#.*#|debian/files|debian/debhelper-build-stamp|debian/.debhelper|debian/svx-dashboard/|debian/tmp|.*\.log|.*\.build|.*\.changes|.*\.buildinfo|.*\.deb)$"

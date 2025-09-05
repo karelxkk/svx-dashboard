@@ -1,15 +1,17 @@
 Source: svx-dashboard
 Section: hamradio
 Priority: optional
-Maintainer: Your Name <you@example.com>
+Maintainer: OK1LBC <xkk@post.cz>
 Build-Depends: debhelper-compat (= 13), dh-python
-Standards-Version: 4.7.0
+Standards-Version: 4.6.2
 Rules-Requires-Root: no
-Homepage: https://example.org/svx-dashboard
+Homepage: https://github.com/karelxkk/svx-dashboard
+Vcs-Git: https://github.com/karelxkk/svx-dashboard.git
+Vcs-Browser: https://github.com/karelxkk/svx-dashboard
 
 Package: svx-dashboard
 Architecture: all
-Depends: ${misc:Depends}, python3, svxlink-server, svxreflector
+Depends: ${misc:Depends}, python3, svxlink-server, svxreflector, tcllib
 Recommends: apache2 | nginx
 Description: SvxLink dashboard with SSE streamer
  Simple dashboard for SvxLink/M17. Ships Apache conf and Nginx snippet,

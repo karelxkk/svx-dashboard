@@ -1,3 +1,21 @@
+svx-dashboard (1.0.0.1-4) unstable; urgency=medium
+
+  * A watch file fix update
+
+ -- OK1LBC <xkk@post.cz>  Fri, 05 Sep 2025 20:33:45 +0200
+
+svx-dashboard (1.0.0.1-3) unstable; urgency=medium
+
+  * Resubmission with orig
+
+ -- OK1LBC <xkk@post.cz>  Fri, 05 Sep 2025 15:02:54 +0200
+
+svx-dashboard (1.0.0.1-2) unstable; urgency=medium
+
+  * Resubmission after key registration
+
+ -- OK1LBC <xkk@post.cz>  Fri, 05 Sep 2025 14:43:44 +0200
+
 svx-dashboard (1.0.0.1-1) unstable; urgency=medium
 
   * Ship /etc/svxlink/events.d/svx_backend.tcl and EchoLink.tcl.
@@ -6,4 +24,4 @@ svx-dashboard (1.0.0.1-1) unstable; urgency=medium
   * Apache/Nginx snippets shipped, not auto-enabled.
   * Add minimal index.html.
 
- -- OK1LBC <ok1lbc@seznam.cz>  Fri, 05 Sep 2025 08:00:00 +0000
+ -- OK1LBC <xkk@post.cz>  Fri, 05 Sep 2025 08:00:00 +0000
