@@ -1,9 +1,0 @@
-[Unit]
-Description=Rotate Svx dashboard history daily
-
-[Timer]
-OnCalendar=daily
-Persistent=true
-
-[Install]
-WantedBy=timers.target

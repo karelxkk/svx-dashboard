@@ -1,9 +1,0 @@
-svx-dashboard (1.0.0.1-1) unstable; urgency=medium
-
-  * Ship /etc/svxlink/events.d/svx_backend.tcl and EchoLink.tcl.
-  * Non-interactive maintainer scripts.
-  * Runtime moved to /run/svx via tmpfiles.
-  * Apache/Nginx snippets shipped, not auto-enabled.
-  * Add minimal index.html.
-
- -- OK1LBC <ok1lbc@seznam.cz>  Fri, 05 Sep 2025 08:00:00 +0000

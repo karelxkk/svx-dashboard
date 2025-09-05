@@ -1,0 +1,13 @@
+# Debian build outputs
+debian/.debhelper/
+debian/debhelper-build-stamp
+debian/files
+debian/svx-dashboard/
+debian/tmp/
+debian/*substvars
+*.deb
+*.build
+*.buildinfo
+*.changes
+*.dsc
+*.tar.*
