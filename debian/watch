@@ -1,0 +1,4 @@
+version=4
+# Fill in your upstream release URL here
+# opts=filenamemangle=s/.+\/v?([\d\.]+)\.tar\.gz/svx-dashboard-$1\.tar\.gz/ \
+#  https://example.org/svx-dashboard/releases .*/v?([\d\.]+)\.tar\.gz

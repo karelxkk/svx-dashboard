@@ -1,0 +1,7 @@
+[Unit]
+Description=Rotate Svx dashboard history
+After=svx-sse.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/svx-history-rotate

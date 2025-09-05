@@ -1,0 +1,13 @@
+Package: svx-dashboard
+Version: 1.0.0.1-1
+Architecture: all
+Maintainer: Your Name <you@example.com>
+Installed-Size: 106
+Depends: python3, svxlink-server, svxreflector
+Recommends: apache2 | nginx
+Section: hamradio
+Priority: optional
+Homepage: https://example.org/svx-dashboard
+Description: SvxLink dashboard with SSE streamer
+ Simple dashboard for SvxLink/M17. Ships Apache conf and Nginx snippet,
+ systemd units and tmpfiles to serve /svx and proxy /svx/events.
