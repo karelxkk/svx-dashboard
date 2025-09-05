@@ -9,3 +9,9 @@ debian/.debhelper/
 debian/debhelper-build-stamp
 debian/files
 debian/tmp/
+debian/.debhelper/
+debian/svx-dashboard/
+debian/debhelper-build-stamp
+debian/files
+debian/*.debhelper
+debian/*.substvars
