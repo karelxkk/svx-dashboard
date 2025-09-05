@@ -1,0 +1,11 @@
+*.build
+*.buildinfo
+*.changes
+*.deb
+*.dsc
+*.debian.tar.*
+*.orig.tar.*
+debian/.debhelper/
+debian/debhelper-build-stamp
+debian/files
+debian/tmp/
