@@ -1,3 +1,10 @@
+svx-dashboard (1.0.0.1-6) UNRELEASED; urgency=medium
+
+  * Initial packaging skeleton (web to /var/www/svx, SSE, rotate, events
+    wrapper).
+
+ -- Karel Kadlec <xkk@post.cz>  Sun, 07 Sep 2025 15:27:08 +0200
+
 svx-dashboard (1.0.0.1-5) unstable; urgency=medium
 
   * Second A watch file fix update for debian

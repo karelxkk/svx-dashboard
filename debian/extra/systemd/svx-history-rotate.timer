@@ -1,9 +1,9 @@
 [Unit]
-Description=Rotate Svx dashboard history daily
-
+Description=Rotate SVX history timer
 [Timer]
-OnCalendar=daily
-Persistent=true
-
+OnBootSec=2min
+OnUnitActiveSec=5min
+AccuracySec=15s
+Unit=svx-history-rotate.service
 [Install]
 WantedBy=timers.target

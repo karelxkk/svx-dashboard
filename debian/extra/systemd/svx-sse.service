@@ -1,26 +1,15 @@
 [Unit]
-Description=SvxLink SSE status streamer
-After=network-online.target
-Wants=network-online.target
-
+Description=SVX SSE daemon
 [Service]
-ProtectSystem=full
-ProtectHome=true
-ProtectClock=yes
-PrivateTmp=true
-NoNewPrivileges=yes
-RestrictAddressFamilies=AF_INET AF_INET6
-LockPersonality=yes
-CapabilityBoundingSet=
-SystemCallFilter=@system-service
 Type=simple
-ExecStart=/usr/bin/env python3 /usr/bin/svx_sse.py
-Environment=SVX_STATUS=/run/svx/status.json
-Environment=SVX_HISTORY=/run/svx/history.csv
+EnvironmentFile=-/etc/svxlink/history.env
 User=www-data
 Group=www-data
+ExecStart=/usr/bin/python3 -u /usr/lib/svx-dashboard/svx_sse.py
 Restart=always
-RestartSec=2
-
-[Install]
-WantedBy=multi-user.target
+RestartSec=1
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ReadWritePaths=/run/svxlink /run/lock/svxlink /var/log/svxlink
+CapabilityBoundingSet=
