@@ -12,7 +12,7 @@ Environment=SVX_SSE_POKE_PORT=8091
 Environment=SVX_STATUS=/run/svxlink/status.json
 Environment=SVX_HISTORY=/run/svxlink/history.csv
 ExecStart=
-ExecStart=/usr/bin/python3 /usr/share/svx-dashboard/bin/svx_sse.py
+ExecStart=/usr/bin/python3 /usr/lib/svx-dashboard/svx_sse.py
 User=svxlink
 Group=svxlink
 Restart=always

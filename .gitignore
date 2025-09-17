@@ -17,3 +17,10 @@ debian/*.debhelper
 debian/*.substvars
 svx-dashboard_*.orig.tar.*
 debian/upstream/signing-key.gpg
+
+debian/*/
+!debian/source/
+!debian/upstream/
+# výjimky pro zdrojové soubory
+!debian/*.*
+!debian/*/*.*

@@ -2,8 +2,8 @@ debian/extra/www/index.html                 usr/share/svx-dashboard/html/
 debian/extra/www/day-config.json            usr/share/svx-dashboard/html/
 debian/extra/www/night-config.json          usr/share/svx-dashboard/html/
 
-debian/extra/bin/svx_sse.py                 usr/share/svx-dashboard/bin/
-debian/extra/bin/svx_history_rotate.sh      usr/share/svx-dashboard/bin/
+debian/extra/bin/svx_sse.py                 usr/lib/svx-dashboard/
+debian/extra/bin/svx_history_rotate.sh      usr/lib/svx-dashboard/
 
 debian/extra/apache/svx-dashboard.conf      etc/apache2/conf-available/
 debian/extra/nginx/svx-dashboard.locations  etc/nginx/snippets/

@@ -1,3 +1,11 @@
 #!/usr/bin/make -f
+export DEB_BUILD_MAINT_OPTIONS=hardening=+all reproducible=+all
+
 %:
-	dh $@
+	dh $@ --with systemd
+
+override_dh_auto_build:
+	:
+
+override_dh_missing:
+	dh_missing --fail-missing
