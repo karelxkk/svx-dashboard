@@ -1,10 +1,4 @@
  Data z RAM
-location /svx/data/ {
-  alias /run/svx-dashboard/;
-  add_header Cache-Control "no-store";
-  try_files $uri =404;
-}
-
 # Statika
 location /svx/ {
   alias /usr/share/svx-dashboard/html/;

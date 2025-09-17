@@ -1,8 +1,9 @@
 svx-dashboard (1.0.0.1-8) unstable; urgency=medium
 
+  [ Karel Kadlec ]
   * web: fix install of index.html (dir→file); preinst cleanup.
 
- -- Karel Kadlec <xkk@post.cz>  Sun, 07 Sep 2025 22:50:56 +0200
+ --  <xkk@raspberrypi>  Wed, 17 Sep 2025 07:52:31 +0200
 
 svx-dashboard (1.0.0.1-7) unstable; urgency=medium
 
