@@ -2,7 +2,7 @@
 export DEB_BUILD_MAINT_OPTIONS=hardening=+all reproducible=+all
 
 %:
-	dh $@ --with systemd
+	dh $@
 
 override_dh_auto_build:
 	:
