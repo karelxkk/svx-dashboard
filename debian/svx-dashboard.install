@@ -1,11 +1,20 @@
-debian/extra/systemd/svx-sse.service              lib/systemd/system/
-debian/extra/systemd/svx-history-rotate.service   lib/systemd/system/
-debian/extra/systemd/svx-history-rotate.timer     lib/systemd/system/
-debian/extra/bin/svx_sse.py                       usr/lib/svx-dashboard/
-debian/extra/bin/svx_history_rotate.sh            usr/lib/svx-dashboard/
-debian/extra/svxlink/events.tcl                   etc/svxlink/events.tcl
-debian/extra/tcl/svx_backend.tcl                  etc/svxlink/events.d/svx_backend.tcl
-debian/extra/tcl/EchoLink.tcl                     etc/svxlink/events.d/EchoLink.tcl
-debian/extra/systemd/history.env                  etc/svxlink/history.env
-debian/extra/apache/svx-dashboard.conf            etc/apache2/conf-available/svx-dashboard.conf
-debian/extra/www/index.html                       var/www/svx/index.html
+debian/extra/www/index.html                 usr/share/svx-dashboard/html/
+debian/extra/www/day-config.json            usr/share/svx-dashboard/html/
+debian/extra/www/night-config.json          usr/share/svx-dashboard/html/
+
+debian/extra/bin/svx_sse.py                 usr/share/svx-dashboard/bin/
+debian/extra/bin/svx_history_rotate.sh      usr/share/svx-dashboard/bin/
+
+debian/extra/apache/svx-dashboard.conf      etc/apache2/conf-available/
+debian/extra/nginx/svx-dashboard.locations  etc/nginx/snippets/
+
+debian/extra/svxlink/EchoLink.tcl           etc/svxlink/events.d/
+debian/extra/svxlink/svx_usrp.tcl           etc/svxlink/events.d/
+debian/extra/svxlink/svx_serial.tcl         etc/svxlink/events.d/
+debian/extra/svxlink/svx_backend.tcl        etc/svxlink/events.d/
+debian/extra/svxlink/events.tcl             etc/svxlink/
+debian/extra/systemd/history.env            etc/svxlink/
+
+debian/extra/systemd/svx-sse.service            lib/systemd/system/
+debian/extra/systemd/svx-history-rotate.service lib/systemd/system/
+debian/extra/systemd/svx-history-rotate.timer   lib/systemd/system/

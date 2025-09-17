@@ -2,5 +2,8 @@
 Description=Rotate SVX history
 [Service]
 Type=oneshot
+User=svxlink
+Group=svxlink
+WorkingDirectory=/run/svxlink
 EnvironmentFile=-/etc/svxlink/history.env
-ExecStart=/usr/lib/svx-dashboard/svx_history_rotate.sh
+ExecStart=/usr/share/svx-dashboard/bin/svx_history_rotate.sh

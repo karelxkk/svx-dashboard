@@ -1,15 +1,22 @@
 [Unit]
-Description=SVX SSE daemon
+Description=SVX SSE bridge
+After=network-online.target
+Wants=network-online.target
+
 [Service]
-Type=simple
-EnvironmentFile=-/etc/svxlink/history.env
-User=www-data
-Group=www-data
-ExecStart=/usr/bin/python3 -u /usr/lib/svx-dashboard/svx_sse.py
+Environment=SVX_SSE_HOST=127.0.0.1
+Environment=SVX_SSE_PORT=8090
+Environment=SVX_SSE_PATH=/sse
+Environment=SVX_SSE_POKE_HOST=127.0.0.1
+Environment=SVX_SSE_POKE_PORT=8091
+Environment=SVX_STATUS=/run/svxlink/status.json
+Environment=SVX_HISTORY=/run/svxlink/history.csv
+ExecStart=
+ExecStart=/usr/bin/python3 /usr/share/svx-dashboard/bin/svx_sse.py
+User=svxlink
+Group=svxlink
 Restart=always
-RestartSec=1
-NoNewPrivileges=yes
-PrivateTmp=yes
-ProtectSystem=strict
-ReadWritePaths=/run/svxlink /run/lock/svxlink /var/log/svxlink
-CapabilityBoundingSet=
+RestartSec=0.5
+
+[Install]
+WantedBy=multi-user.target

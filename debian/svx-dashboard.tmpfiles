@@ -1,3 +1,6 @@
-d /run/svx 0775 www-data www-data -
-f /run/svx/status.json 0664 www-data www-data -
-f /run/svx/history.csv 0664 www-data www-data -
+d /var/log/svxlink          0755 svxlink svxlink -
+d /var/log/svxlink/archive  0755 svxlink svxlink -
+d /run/svxlink              0775 svxlink svxlink -
+d /run/lock/svxlink         0775 svxlink svxlink -
+w /run/svxlink/history.csv  0644 svxlink svxlink - ts;node;dur;tg
+w /run/svxlink/status.json  0644 svxlink svxlink - {}

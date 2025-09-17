@@ -1,9 +1,8 @@
 [Unit]
-Description=Rotate SVX history timer
+Description=Run history rotation every 5 minutes
 [Timer]
-OnBootSec=2min
-OnUnitActiveSec=5min
-AccuracySec=15s
+OnCalendar=*:0/5
+Persistent=true
 Unit=svx-history-rotate.service
 [Install]
 WantedBy=timers.target

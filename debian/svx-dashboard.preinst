@@ -1,0 +1,21 @@
+#!/bin/sh
+set -e
+case "$1" in
+  install|upgrade)
+    for p in \
+      /etc/apache2/conf-available/svx-dashboard.conf \
+      /etc/apache2/conf-enabled/svx-dashboard.conf \
+      /etc/nginx/snippets/svx-dashboard.locations \
+      /etc/svxlink/events.d/EchoLink.tcl \
+      /etc/svxlink/events.d/svx_backend.tcl \
+      /etc/svxlink/events.tcl \
+      /etc/svxlink/history.env
+    do
+      [ -d "$p" ] && rm -rf "$p"
+    done
+  ;;
+  abort-upgrade|abort-install|abort-remove|abort-deconfigure)
+    :
+  ;;
+esac
+exit 0

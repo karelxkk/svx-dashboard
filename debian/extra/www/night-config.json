@@ -1,0 +1,44 @@
+{
+  "description": "Konfigurace SVX Dashboard (tmavý motiv)",
+  "app_base": {
+    "description": "Základní URL cesty aplikace (musí končit lomítkem).",
+    "value": "/svx/"
+  },
+  "sse_url": {
+    "description": "Absolutní nebo relativní URL EventSource (SSE).",
+    "value": "/svx/sse"
+  },
+  "data_base": {
+    "description": "URL prefix pro statická data (status.json, history.csv). Musí končit lomítkem.",
+    "value": "/svx/data/"
+  },
+  "public_url": {
+    "description": "Veřejná URL zobrazená v hlavičce.",
+    "value": "http://ham-radio.cz/svx"
+  },
+  "history_limit": {
+    "description": "Maximální počet záznamů v historii, které se zobrazí.",
+    "value": 28
+  },
+  "colors": {
+    "description": "Barevné schéma – mapuje se na CSS proměnné.",
+    "value": {
+      "bg":        { "description": "Barva pozadí stránky",            "value": "#0f172a" },
+      "fg":        { "description": "Základní barva textu",            "value": "#e5e7eb" },
+      "muted":     { "description": "Tlumený text",                    "value": "#94a3b8" },
+      "bord":      { "description": "Barva rámečků/tabulkových linek", "value": "#334155" },
+      "card":      { "description": "Pozadí karet/sekcí",               "value": "#111827" },
+      "badge-bg":  { "description": "Pozadí odznaku (Živě)",           "value": "#1f2937" },
+      "badge-fg":  { "description": "Text odznaku (Živě)",             "value": "#cbd5e1" },
+      "thead-fg":  { "description": "Barva textu v záhlaví tabulek",   "value": "#9AA6B2" },
+      "thead":     { "description": "Pozadí hlaviček tabulek",         "value": "#1e293b" },
+      "row-hover": { "description": "Hover řádků tabulek",             "value": "#0b2942" },
+      "dot-ok":    { "description": "Zelená stavové tečky",            "value": "#22c55e" },
+      "dot-ok-rgb":{ "description": "RGB pro pulz tečky (bez mříže)",  "value": "34, 197, 94" },
+      "dot-err":   { "description": "Červená pro chybu/odpojeno",      "value": "#f87171" },
+      "talk-bg":   { "description": "Pozadí řádku při hovoru",         "value": "#3a2e00" },
+      "talk-bg-hover": { "description": "Hover při hovoru",            "value": "#4a3a00" },
+      "header-bg": { "description": "Pozadí hlavičky (sticky)",        "value": "#111827cc" }
+    }
+  }
+}

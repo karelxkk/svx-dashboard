@@ -1,9 +1,16 @@
-svx-dashboard (1.0.0.1-6) UNRELEASED; urgency=medium
+svx-dashboard (1.0.0.1-8) unstable; urgency=medium
+
+  * web: fix install of index.html (dir→file); preinst cleanup.
+
+ -- Karel Kadlec <xkk@post.cz>  Sun, 07 Sep 2025 22:50:56 +0200
+
+svx-dashboard (1.0.0.1-7) unstable; urgency=medium
 
   * Initial packaging skeleton (web to /var/www/svx, SSE, rotate, events
     wrapper).
+  * web: move to /usr/share per Policy; cleanup /var/www on upgrade
 
- -- Karel Kadlec <xkk@post.cz>  Sun, 07 Sep 2025 15:27:08 +0200
+ -- Karel Kadlec <xkk@post.cz>  Sun, 07 Sep 2025 21:52:26 +0200
 
 svx-dashboard (1.0.0.1-5) unstable; urgency=medium
 

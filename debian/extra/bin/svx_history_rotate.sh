@@ -6,7 +6,7 @@ ARCH_DIR="${SVX_HISTORY_ARCHIVE:-/var/log/svxlink/archive}"
 LOCK_DIR="${SVX_LOCKDIR:-/run/lock/svxlink}"
 SENT_LOCK="$LOCK_DIR/history.lock"; ROT_LOCK="$LOCK_DIR/rotate.lock"
 HISTORY_LIMIT="${HISTORY_LIMIT:-${SVX_HISTORY_LIMIT:-28}}"
-CSV_HEADER="${CSV_HEADER:-timestamp;src;event;data}"
+CSV_HEADER="${CSV_HEADER:-ts;node;dur;tg}"
 ROTATOR_WAIT_MS="${ROTATOR_WAIT_MS:-500}"
 umask 002; mkdir -p "$(dirname "$HIST_FULL")" "$ARCH_DIR" "$(dirname "$HIST_RUN")" "$LOCK_DIR"
 exec 9>"$ROT_LOCK"; flock -n 9 || exit 0

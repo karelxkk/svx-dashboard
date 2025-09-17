@@ -1,4 +1,12 @@
-if {![info exists script_path]} { set script_path /usr/share/svxlink }
+set script_path /usr/share/svxlink/events.tcl
 source /usr/share/svxlink/events.tcl
-set files [glob -nocomplain -types f -directory /etc/svxlink/events.d *.tcl]
-if {[llength $files]} { foreach f [lsort $files] { source $f } }
+# Set the path to the main events script
+set script_path /usr/share/svxlink/events.tcl
+
+# Source the main events script
+source $script_path
+
+# Source all additional event scripts from the events.d directory
+foreach f [lsort [glob -nocomplain /etc/svxlink/events.d/*.tcl]] {
+    sourceTcl $f
+}
