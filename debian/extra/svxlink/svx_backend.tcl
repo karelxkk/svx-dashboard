@@ -1,5 +1,5 @@
 #!/usr/bin/env tclsh
-# backend_csv.tcl — backend s CSV ulozistem a HTTP pull z reflektoru
+# 99_backend_csv.tcl — backend s CSV ulozistem a HTTP pull z reflektoru
 # Komentare nepouzivaji slozene zavorky, aby nevadily TCL parseru v jinych kontextech
 
 # --- Load guard -----------------------------------------------------------
@@ -18,15 +18,20 @@ namespace eval ::ELB {
     variable SSE_HOST "127.0.0.1"
     variable SSE_PORT 8091
     variable REFLECTOR_URL "http://127.0.0.1:8880/status"
-    variable POLL_MS 60000
+    variable POLL_MS 5000
     variable LOCAL_LINK "OK1LBC-L"
     variable EL_ACTIVE_FILE "/run/svxlink/elb_el_active"
 }
 
 # --- Util ----------------------------------------------------------------
 proc ::ELB::trace {msg} {
-    # Logging disabled
-    return
+    catch {
+        file mkdir /run/svxlink
+        set f [open "/run/svxlink/elb.log" a]
+        fconfigure $f -encoding utf-8 -translation lf
+        puts $f "[clock format [clock seconds] -format {%Y-%m-%d %H:%M:%S}] $msg"
+        close $f
+    }
 }
 proc ::ELB::ensure_dir {p} {
     set d [file dirname $p]
@@ -358,7 +363,7 @@ proc ::ELB::pull_and_refresh {} { # entry
         if {$changed} {
             ::ELB::trace "REFRESH from http nodes=[dict size $nodesDict]"
             ::ELB::write_status $st
-            ::ELB::sse refresh
+            ::ELB::sse "status"
         } else {
             ::ELB::trace "PULL no change"
         }
@@ -468,7 +473,8 @@ proc ::ELB::with_lock {name body} {
 }
 proc ::ELB::append_history {dur tg link start stop} {
     variable HISTORY_LOG; variable HISTORY_RUN; variable MAX_ROWS
-    set line [format "%s;%s;%d;%d" [::ELB::fmt_ts $stop] $link $dur $tg]
+    # místo času ukončení ($stop) zapisuj čas začátku hovoru ($start)
+    set line [format "%s;%s;%d;%d" [::ELB::fmt_ts $start] $link $dur $tg]
     catch {
         ::ELB::ensure_dir $HISTORY_LOG
         set f [open $HISTORY_LOG a]
@@ -481,9 +487,7 @@ proc ::ELB::append_history {dur tg link start stop} {
         if {[file exists $HISTORY_RUN]} {
             if {![catch { set fr [open $HISTORY_RUN r] }]} {
                 fconfigure $fr -encoding utf-8 -translation lf
-                set rows [split [string trimright [read $fr] "
-"] "
-"]
+                set rows [split [string trimright [read $fr] "\n"] "\n"]
                 close $fr
             }
         }
@@ -600,7 +604,8 @@ proc ::ReflectorLogic::reflector_connection_status_update {state} {
                 }
             }
         }
-        if {$changed} { ::ELB::write_status $st; ::ELB::sse refresh }
+        if {$changed} { ::ELB::write_status $st }
+        ::ELB::sse "status"
     }
     if {[llength [info procs ::ReflectorLogic::__elb_prev_rcu]]} {
         uplevel 1 ::ReflectorLogic::__elb_prev_rcu $state

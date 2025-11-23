@@ -1,7 +1,7 @@
 [Unit]
-Description=Run history rotation every 5 minutes
+Description=Run daily history rotation
 [Timer]
-OnCalendar=*:0/5
+OnCalendar=*-*-* 03:33:00
 Persistent=true
 Unit=svx-history-rotate.service
 [Install]

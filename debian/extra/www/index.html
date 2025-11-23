@@ -433,10 +433,15 @@
             var APP_BASE = _ab && _ab.content ? _ab.content : "/";
 
             var _su = document.querySelector('meta[name="sse-url"]');
-            var SSE_URL = _su && _su.content ? _su.content : slash(APP_BASE) + "sse";
+            var SSE_URL = _su && _su.content
+                ? _su.content
+                : slash(APP_BASE) + "sse";
 
             var _ml = document.querySelector('meta[name="hist-limit"]');
-            var HIST_LIMIT = parseInt((_ml && _ml.content) ? _ml.content : "28", 10);
+            var HIST_LIMIT = parseInt(
+                (_ml && _ml.content) ? _ml.content : "28",
+                10
+            );
 
             var SSE_OK = false;
             var LAST_HIST = [];
@@ -447,7 +452,10 @@
 
             async function loadConfig() {
                 try {
-                    const r = await fetch(slash(APP_BASE) + "config.json", { cache: "no-store" });
+                    const r = await fetch(
+                        slash(APP_BASE) + "config.json",
+                        { cache: "no-store" }
+                    );
                     if (!r.ok) return;
                     const c = await r.json();
                     applyConfig(c);
@@ -461,23 +469,21 @@
                     return (n < 10 ? "0" : "") + n;
                 }
                 return (
-                    pad(d.getDate()) +
-                    "." +
-                    pad(d.getMonth() + 1) +
-                    "." +
-                    d.getFullYear() +
-                    " " +
-                    pad(d.getHours()) +
-                    ":" +
-                    pad(d.getMinutes()) +
-                    ":" +
+                    pad(d.getDate()) + "." +
+                    pad(d.getMonth() + 1) + "." +
+                    d.getFullYear() + " " +
+                    pad(d.getHours()) + ":" +
+                    pad(d.getMinutes()) + ":" +
                     pad(d.getSeconds())
                 );
             }
 
             function fmtSince(ts) {
                 if (!ts) return "-";
-                var s = Math.max(0, Math.floor(Date.now() / 1000) - ts);
+                var s = Math.max(
+                    0,
+                    Math.floor(Date.now() / 1000) - ts
+                );
                 if (s < 60) return s + " s";
                 if (s < 3600) return Math.floor(s / 60) + " m";
                 return Math.floor(s / 3600) + " h";
@@ -488,7 +494,9 @@
                 if (sec < 60) return sec + " s";
                 var m = Math.floor(sec / 60),
                     s = sec % 60;
-                if (m < 60) return m + ":" + (s < 10 ? "0" : "") + s;
+                if (m < 60) {
+                    return m + ":" + (s < 10 ? "0" : "") + s;
+                }
                 var h = Math.floor(m / 60);
                 m %= 60;
                 return h + ":" + (m < 10 ? "0" : "") + m;
@@ -504,18 +512,37 @@
             function updateUiTimes() {
                 var now = Math.floor(Date.now() / 1000);
 
-                document.querySelectorAll("#nodesTbl td.rel").forEach(function (el) {
-                    var from = parseInt(el.dataset.from || "0", 10);
-                    el.textContent = from ? fmtSince(from) : "-";
-                });
+                document
+                    .querySelectorAll("#nodesTbl td.rel")
+                    .forEach(function (el) {
+                        var from = parseInt(
+                            el.dataset.from || "0",
+                            10
+                        );
+                        el.textContent = from
+                            ? fmtSince(from)
+                            : "-";
+                    });
 
-                document.querySelectorAll("#nodesTbl td.hovor").forEach(function (el) {
-                    var active = el.dataset.active === "1";
-                    var start = parseInt(el.dataset.start || "0", 10);
-                    var last = parseInt(el.dataset.last || "0", 10);
-                    var dur = active && start ? now - start : last || 0;
-                    el.textContent = dur ? fmtDur(dur) : "—";
-                });
+                document
+                    .querySelectorAll("#nodesTbl td.hovor")
+                    .forEach(function (el) {
+                        var active = el.dataset.active === "1";
+                        var start = parseInt(
+                            el.dataset.start || "0",
+                            10
+                        );
+                        var last = parseInt(
+                            el.dataset.last || "0",
+                            10
+                        );
+                        var dur = active && start
+                            ? now - start
+                            : last || 0;
+                        el.textContent = dur
+                            ? fmtDur(dur)
+                            : "—";
+                    });
             }
 
             function tgArray(x) {
@@ -530,7 +557,9 @@
                 return 0;
             }
 
-            const LIKELY_TG = new Set([0, 8, 13, 14, 91, 120, 123, 920]);
+            const LIKELY_TG = new Set([
+                0, 8, 13, 14, 91, 120, 123, 920
+            ]);
 
             function fillHistOne(items) {
                 var body = document.getElementById("histBody");
@@ -592,7 +621,9 @@
                             tr.appendChild(td8);
                         } else {
                             for (var k = 0; k < 4; k++) {
-                                tr.appendChild(document.createElement("td"));
+                                tr.appendChild(
+                                    document.createElement("td")
+                                );
                             }
                         }
 
@@ -631,12 +662,15 @@
                 if (NODE_ORDER.length === 0) {
                     var pairs = keysAll.map(function (k) {
                         var it = nodes[k] || {};
-                        var ts = it.last_change || it.last_talk_stop || it.last_talk_start || 0;
+                        var ts = it.last_change ||
+                                 it.last_talk_stop ||
+                                 it.last_talk_start ||
+                                 0;
                         return { k: k, ts: ts };
                     });
 
                     pairs.sort(function (a, b) {
-                        <!-- nejnovější nahoru -->
+                        // nejnovější nahoru
                         if (b.ts !== a.ts) return b.ts - a.ts;
                         return a.k.localeCompare(b.k);
                     });
@@ -650,7 +684,9 @@
                         return present.has(k);
                     });
                     keysAll.forEach(function (k) {
-                        if (NODE_ORDER.indexOf(k) === -1) NODE_ORDER.push(k);
+                        if (NODE_ORDER.indexOf(k) === -1) {
+                            NODE_ORDER.push(k);
+                        }
                     });
                 }
 
@@ -663,7 +699,10 @@
                     if (!it.connected) tr.classList.add("disconnected");
                     if (it.talk_active) tr.classList.add("talking");
 
-                    var lastTs = it.last_change || it.last_talk_stop || it.last_talk_start || 0;
+                    var lastTs = it.last_change ||
+                                 it.last_talk_stop ||
+                                 it.last_talk_start ||
+                                 0;
 
                     var td1 = document.createElement("td");
                     var dot = document.createElement("span");
@@ -681,8 +720,8 @@
                     var state = it.talk_active
                         ? "Mluví"
                         : it.connected
-                        ? "Připojeno"
-                        : "Odpojeno";
+                            ? "Připojeno"
+                            : "Odpojeno";
 
                     var td3 = document.createElement("td");
                     td3.textContent = state;
@@ -706,7 +745,11 @@
 
                     var dur = 0;
                     if (it.talk_active && it.last_talk_start) {
-                        dur = Math.max(0, Math.floor(Date.now() / 1000) - it.last_talk_start);
+                        dur = Math.max(
+                            0,
+                            Math.floor(Date.now() / 1000) -
+                            it.last_talk_start
+                        );
                     } else if (it.talk_last_duration) {
                         dur = it.talk_last_duration;
                     }
@@ -725,10 +768,13 @@
             }
 
             function onStatus(obj) {
-                try { } catch(_){}
+                try {} catch (_) {}
+
                 var cs = document.getElementById("cs");
                 if (cs) {
-                    cs.textContent = obj.callsign ? "(" + obj.callsign + ")" : "";
+                    cs.textContent = obj.callsign
+                        ? "(" + obj.callsign + ")"
+                        : "";
                 }
 
                 CUR = obj;
@@ -755,14 +801,16 @@
                             if (
                                 !it.talk_active &&
                                 (it.talk_last_duration || 0) > 0 &&
-                                prev.talk_last_duration !== (it.talk_last_duration || 0)
+                                prev.talk_last_duration !==
+                                    (it.talk_last_duration || 0)
                             ) {
                                 changed = true;
                             }
 
                             LAST_STATE[k] = {
                                 talk_active: !!it.talk_active,
-                                talk_last_duration: it.talk_last_duration || 0,
+                                talk_last_duration:
+                                    it.talk_last_duration || 0,
                                 last_change: it.last_change || 0
                             };
                         });
@@ -773,7 +821,7 @@
                     });
 
                     if (changed) {
-                        <!-- placeholder for future actions on change -->
+                        // placeholder for future actions on change
                     }
                 } catch (_) {}
             }
@@ -794,19 +842,64 @@
 
                 var ht = document.getElementById("histTitle");
                 if (ht) {
-                    ht.textContent = "Historie (posledních " + LAST_HIST.length + ")";
+                    ht.textContent =
+                        "Historie (posledních " +
+                        LAST_HIST.length +
+                        ")";
                 }
             }
 
-            function onHistory(items) { histAppend(items); }   function onHistoryAdd(items) { histAppend(items); }function parseStatusRow(line) { if (!line) return null; var parts = String(line).split(';'); function gi(i){ return (parts[i]||'').trim(); } function giI(i){ var v = parseInt(gi(i),10); return isFinite(v)? v:0; } var link = gi(0); if(!link) return null; return { link: link, src: gi(1)||'rl', connected: giI(2), talk_active: giI(3), tg: giI(4), last_change: giI(5), last_talk_start: giI(6), last_talk_stop: giI(7), talk_last_duration: giI(8) }; }
+            function onHistory(items) {
+                histAppend(items);
+            }
 
-function onStatusAdd(p) { try {
+            function onHistoryAdd(items) {
+                histAppend(items);
+            }
+
+            function parseStatusRow(line) {
+                if (!line) return null;
+
+                var parts = String(line).split(";");
+
+                function gi(i) {
+                    return (parts[i] || "").trim();
+                }
+
+                function giI(i) {
+                    var v = parseInt(gi(i), 10);
+                    return isFinite(v) ? v : 0;
+                }
+
+                var link = gi(0);
+                if (!link) return null;
+
+                return {
+                    link: link,
+                    src: gi(1) || "rl",
+                    connected: giI(2),
+                    talk_active: giI(3),
+                    tg: giI(4),
+                    last_change: giI(5),
+                    last_talk_start: giI(6),
+                    last_talk_stop: giI(7),
+                    talk_last_duration: giI(8)
+                };
+            }
+
+            function onStatusAdd(p) {
+                try {
                     var row = parseStatusRow(p);
-                if (!row) return;
-                CUR.nodes = CUR.nodes || {};
-                CUR.nodes[row.link] = Object.assign({}, CUR.nodes[row.link] || {}, row);
+                    if (!row) return;
 
-                fillNodes(CUR);
+                    CUR.nodes = CUR.nodes || {};
+                    CUR.nodes[row.link] = Object.assign(
+                        {},
+                        CUR.nodes[row.link] || {},
+                        row
+                    );
+
+                    fillNodes(CUR);
                 } catch (_) {}
             }
 
@@ -826,7 +919,7 @@ function onStatusAdd(p) { try {
                         startUiTick();
                     };
 
-                    <!-- CSV status snapshot (semicolon separated) -->
+                    // CSV status snapshot (semicolon separated)
                     ev.addEventListener("status_csv", (e) => {
                         const o = parseStatusCsv(e.data);
                         if (o) onStatus(o);
@@ -836,7 +929,7 @@ function onStatusAdd(p) { try {
                         onStatusAdd(e.data);
                     });
 
-                    <!-- Historie zůstává beze změny (CSV) -->
+                    // Historie zůstává beze změny (CSV)
                     ev.addEventListener("history", (e) => {
                         const arr = parseCsvHist(e.data);
                         if (arr && arr.length) onHistory(arr);
@@ -847,11 +940,19 @@ function onStatusAdd(p) { try {
                         if (arr && arr.length) onHistoryAdd(arr);
                     });
 
-                    <!-- Volitelné realtime události (ponecháno) -->
-                    ev.addEventListener("talk_start", (e) => { handleTalkEvent(e.data, true); });
-                    ev.addEventListener("talk_stop", (e) => { handleTalkEvent(e.data, false); });
-                    ev.addEventListener("connect", (e) => { handleConnEvent(e.data, true); });
-                    ev.addEventListener("disconnect", (e) => { handleConnEvent(e.data, false); });
+                    // Volitelné realtime události (ponecháno)
+                    ev.addEventListener("talk_start", (e) => {
+                        handleTalkEvent(e.data, true);
+                    });
+                    ev.addEventListener("talk_stop", (e) => {
+                        handleTalkEvent(e.data, false);
+                    });
+                    ev.addEventListener("connect", (e) => {
+                        handleConnEvent(e.data, true);
+                    });
+                    ev.addEventListener("disconnect", (e) => {
+                        handleConnEvent(e.data, false);
+                    });
 
                     ev.onerror = (err) => {
                         SSE_OK = false;
@@ -862,7 +963,7 @@ function onStatusAdd(p) { try {
                         const d = document.getElementById("liveDot");
                         if (d) d.classList.add("err");
 
-                        try { ev.close(); } catch(_) {}
+                        try { ev.close(); } catch (_) {}
                         setTimeout(connectSSE, 2500);
                     };
                 } catch (_) {
@@ -876,17 +977,28 @@ function onStatusAdd(p) { try {
             }
 
             function cfgVal(x) {
-                return x && typeof x === "object" && "value" in x ? x.value : x;
+                return x && typeof x === "object" && "value" in x
+                    ? x.value
+                    : x;
             }
 
-            function jparse(s) { return null; }
+            function jparse(s) {
+                return null;
+            }
 
             function parseHumanTs(s) {
                 try {
                     var a = String(s).split(" ");
                     var d = a[0].split(".");
                     var t = a[1].split(":");
-                    var dt = new Date(+d[2], +d[1] - 1, +d[0], +t[0], +t[1], +t[2]);
+                    var dt = new Date(
+                        +d[2],
+                        +d[1] - 1,
+                        +d[0],
+                        +t[0],
+                        +t[1],
+                        +t[2]
+                    );
                     return Math.floor(dt.getTime() / 1000);
                 } catch (_) {
                     return 0;
@@ -923,7 +1035,9 @@ function onStatusAdd(p) { try {
                 return out;
             }
 
-            function parseHistoryPayload(s) { return parseCsvHist(s); }
+            function parseHistoryPayload(s) {
+                return parseCsvHist(s);
+            }
 
             function applyConfig(c) {
                 if (!c) return;
@@ -936,7 +1050,10 @@ function onStatusAdd(p) { try {
                         SSE_URL = String(v);
                     },
                     public_url: (v) => {
-                        const s = v || (location.origin + APP_BASE.replace(/\/$/, ""));
+                        const s = v || (
+                            location.origin +
+                            APP_BASE.replace(/\/$/, "")
+                        );
                         const el = document.getElementById("baseUrl");
                         if (el) el.textContent = s;
 
@@ -948,7 +1065,9 @@ function onStatusAdd(p) { try {
                     },
                     history_limit: (v) => {
                         const n = parseInt(v, 10);
-                        if (isFinite(n) && n > 0) HIST_LIMIT = n;
+                        if (isFinite(n) && n > 0) {
+                            HIST_LIMIT = n;
+                        }
                     }
                 };
 
@@ -963,13 +1082,21 @@ function onStatusAdd(p) { try {
                         const entry = colors[name];
                         const v = cfgVal(entry);
                         if (v != null) {
-                            document.documentElement.style.setProperty("--" + name, String(v));
+                            document.documentElement.style
+                                .setProperty(
+                                    "--" + name,
+                                    String(v)
+                                );
                         }
                     });
                 }
             }
 
-            <!-- Parsování CSV statusu: hlavička + řádky "link;src;connected;talk_active;tg;last_change;last_talk_start;last_talk_stop;talk_last_duration" -->
+            // Parsování CSV statusu:
+            // hlavička + řádky
+            // "link;src;connected;talk_active;tg;
+            //  last_change;last_talk_start;last_talk_stop;
+            //  talk_last_duration"
             function parseStatusCsv(txt) {
                 if (!txt) return null;
 
@@ -980,10 +1107,16 @@ function onStatusAdd(p) { try {
 
                 if (!lines.length) return null;
 
-                var header = lines[0].split(";").map((s) => s.trim());
+                var header = lines[0]
+                    .split(";")
+                    .map((s) => s.trim());
+
                 var startIdx = 1;
-                if (!header.length || header[0].toLowerCase() !== "link") {
-                    <!-- žádná hlavička → použij výchozí a ber vše jako data -->
+                if (
+                    !header.length ||
+                    header[0].toLowerCase() !== "link"
+                ) {
+                    // žádná hlavička → výchozí a vše data
                     header = [
                         "link",
                         "src",
@@ -1005,8 +1138,11 @@ function onStatusAdd(p) { try {
 
                 function gi(parts, name) {
                     var pos = idx[name];
-                    return pos != null ? (parts[pos] || "").trim() : "";
+                    return pos != null
+                        ? (parts[pos] || "").trim()
+                        : "";
                 }
+
                 function giI(parts, name) {
                     var v = parseInt(gi(parts, name), 10);
                     return isFinite(v) ? v : 0;
@@ -1030,38 +1166,56 @@ function onStatusAdd(p) { try {
                         last_change: giI(parts, "last_change"),
                         last_talk_start: giI(parts, "last_talk_start"),
                         last_talk_stop: giI(parts, "last_talk_stop"),
-                        talk_last_duration: giI(parts, "talk_last_duration")
+                        talk_last_duration:
+                            giI(parts, "talk_last_duration")
                     };
                 }
 
                 return { nodes };
             }
 
-function parseTalk(payload) {
-    if (payload == null) return null;
-    var s = String(payload).replace(/[#:]/g, " ");
-    var parts = s.split(/[\s,]+/).filter(Boolean);
-    var tg = 0, link = null;
-    for (var i = 0; i < parts.length; i++) {
-        if (/^[0-9]+$/.test(parts[i])) { tg = parseInt(parts[i], 10); break; }
-    }
-    for (var j = parts.length - 1; j >= 0; j--) {
-        if (/[A-Za-z]/.test(parts[j])) { link = parts[j]; break; }
-    }
-    return link ? { link: link, tg: tg } : null;
-}
+            function parseTalk(payload) {
+                if (payload == null) return null;
+                var s = String(payload).replace(/[#:]/g, " ");
+                var parts = s
+                    .split(/[\s,]+/)
+                    .filter(Boolean);
 
-function parseConn(payload) {
-    if (payload == null) return null;
-    var s = String(payload).trim();
-    var m = s.match(/([A-Za-z0-9][A-Za-z0-9-]*(?:-L|-R)?)/);
-    return m ? m[1] : null;
-}
+                var tg = 0, link = null;
+
+                for (var i = 0; i < parts.length; i++) {
+                    if (/^[0-9]+$/.test(parts[i])) {
+                        tg = parseInt(parts[i], 10);
+                        break;
+                    }
+                }
+                for (var j = parts.length - 1; j >= 0; j--) {
+                    if (/[A-Za-z]/.test(parts[j])) {
+                        link = parts[j];
+                        break;
+                    }
+                }
+                return link ? { link: link, tg: tg } : null;
+            }
+
+            function parseConn(payload) {
+                if (payload == null) return null;
+                var s = String(payload).trim();
+                var m = s.match(
+                    /([A-Za-z0-9][A-Za-z0-9-]*(?:-L|-R)?)/
+                );
+                return m ? m[1] : null;
+            }
 
             function ensureNode(name) {
                 if (!CUR.nodes) CUR.nodes = {};
                 if (!CUR.nodes[name]) {
-                    CUR.nodes[name] = { connected: 0, talk_active: 0, tg: 0, src: "rl" };
+                    CUR.nodes[name] = {
+                        connected: 0,
+                        talk_active: 0,
+                        tg: 0,
+                        src: "rl"
+                    };
                 }
                 return CUR.nodes[name];
             }
@@ -1083,7 +1237,10 @@ function parseConn(payload) {
                     n.talk_active = 0;
                     n.last_talk_stop = now;
                     if (n.last_talk_start) {
-                        n.talk_last_duration = Math.max(0, now - n.last_talk_start);
+                        n.talk_last_duration = Math.max(
+                            0,
+                            now - n.last_talk_start
+                        );
                     }
                 }
 
@@ -1103,26 +1260,36 @@ function parseConn(payload) {
                 fillNodes(CUR);
             }
 
-            document.addEventListener("DOMContentLoaded", function () {
-                var y = document.getElementById("year");
-                if (y) y.textContent = new Date().getFullYear();
+            document.addEventListener(
+                "DOMContentLoaded",
+                function () {
+                    var y = document.getElementById("year");
+                    if (y) y.textContent =
+                        new Date().getFullYear();
 
-                var bu = document.getElementById("baseUrl");
-                if (bu) bu.textContent = location.origin + APP_BASE.replace(/\/$/, "");
+                    var bu = document.getElementById("baseUrl");
+                    if (bu) {
+                        bu.textContent =
+                            location.origin +
+                            APP_BASE.replace(/\/$/, "");
+                    }
 
-                var pl = document.getElementById("publicLink");
-                if (pl) {
-                    var def = location.origin + APP_BASE.replace(/\/$/, "");
-                    pl.href = def;
-                    pl.textContent = def;
+                    var pl = document.getElementById("publicLink");
+                    if (pl) {
+                        var def =
+                            location.origin +
+                            APP_BASE.replace(/\/$/, "");
+                        pl.href = def;
+                        pl.textContent = def;
+                    }
+
+                    // načti volitelnou konfiguraci
+                    loadConfig().finally(function () {
+                        connectSSE();
+                        startUiTick();
+                    });
                 }
-
-                <!-- načti volitelnou konfiguraci -->
-                loadConfig().finally(function () {
-                    connectSSE();
-                    startUiTick();
-                });
-            });
+            );
     </script>
 </body>
 
