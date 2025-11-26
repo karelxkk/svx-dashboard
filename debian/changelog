@@ -1,6 +1,7 @@
 svx-dashboard (1.0.0-1) unstable; urgency=medium
 
-  * Initial release. Includes svx-sse streamer, history rotate tools,
-    web UI, Apache/Nginx snippets, SVXLink events, and elb-daemon.
+  * Initial release. Includes svx-sse streamer, history rotation,
+    SVXLink event hooks, Apache/Nginx snippets, tmpfiles.d,
+    systemd units and elb-daemon backend.
 
- -- Karel Kadlec <xkk@post.cz>  Wed, 26 Nov 2025 13:00:00 +0100
+ -- Karel Kadlec <xkk@post.cz>  Wed, 26 Nov 2025 14:00:00 +0100
