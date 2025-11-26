@@ -1,1 +1,2 @@
 svx-dashboard: maintainer-manual-page debian/man/*
+source-is-missing debian/extra/www/index.html

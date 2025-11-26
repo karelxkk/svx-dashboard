@@ -1,48 +1,6 @@
-svx-dashboard (1.0.0.1-8) unstable; urgency=medium
+svx-dashboard (1.0.0-1) unstable; urgency=medium
 
-  [ Karel Kadlec ]
-  * web: fix install of index.html (dir→file); preinst cleanup.
+  * Initial release. Includes svx-sse streamer, history rotate tools,
+    web UI, Apache/Nginx snippets, SVXLink events, and elb-daemon.
 
- --  <xkk@raspberrypi>  Wed, 17 Sep 2025 07:52:31 +0200
-
-svx-dashboard (1.0.0.1-7) unstable; urgency=medium
-
-  * Initial packaging skeleton (web to /var/www/svx, SSE, rotate, events
-    wrapper).
-  * web: move to /usr/share per Policy; cleanup /var/www on upgrade
-
- -- Karel Kadlec <xkk@post.cz>  Sun, 07 Sep 2025 21:52:26 +0200
-
-svx-dashboard (1.0.0.1-5) unstable; urgency=medium
-
-  * Second A watch file fix update for debian
-
- -- OK1LBC <xkk@post.cz>  Fri, 05 Sep 2025 21:56:23 +0200
-
-svx-dashboard (1.0.0.1-4) unstable; urgency=medium
-
-  * A watch file fix update
-
- -- OK1LBC <xkk@post.cz>  Fri, 05 Sep 2025 20:33:45 +0200
-
-svx-dashboard (1.0.0.1-3) unstable; urgency=medium
-
-  * Resubmission with orig
-
- -- OK1LBC <xkk@post.cz>  Fri, 05 Sep 2025 15:02:54 +0200
-
-svx-dashboard (1.0.0.1-2) unstable; urgency=medium
-
-  * Resubmission after key registration
-
- -- OK1LBC <xkk@post.cz>  Fri, 05 Sep 2025 14:43:44 +0200
-
-svx-dashboard (1.0.0.1-1) unstable; urgency=medium
-
-  * Ship /etc/svxlink/events.d/svx_backend.tcl and EchoLink.tcl.
-  * Non-interactive maintainer scripts.
-  * Runtime moved to /run/svx via tmpfiles.
-  * Apache/Nginx snippets shipped, not auto-enabled.
-  * Add minimal index.html.
-
- -- OK1LBC <xkk@post.cz>  Fri, 05 Sep 2025 08:00:00 +0000
+ -- Karel Kadlec <xkk@post.cz>  Wed, 26 Nov 2025 13:00:00 +0100

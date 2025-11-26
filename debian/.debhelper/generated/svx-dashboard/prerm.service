@@ -1,5 +1,0 @@
-# Automatically added by dh_installsystemd/13.11.4
-if [ -z "${DPKG_ROOT:-}" ] && [ "$1" = remove ] && [ -d /run/systemd/system ] ; then
-	deb-systemd-invoke stop 'svx-history-rotate.service' 'svx-history-rotate.timer' 'svx-sse.service' >/dev/null || true
-fi
-# End automatically added section
