@@ -2,28 +2,14 @@
 set -e
 
 case "$1" in
-  configure|reconfigure)
-    systemd-tmpfiles --create || true
-    systemctl daemon-reload || true
-
-    # povolit jednotky
-    systemctl enable svx-sse.service svx-history-rotate.timer || true
-    # smazat případný failed stav
-    systemctl reset-failed svx-sse.service svx-history-rotate.service || true
-    # spustit s novou definicí
-    systemctl restart svx-sse.service || true
-    systemctl start   svx-history-rotate.timer || true
-
-    # Apache přes helper; reload si zajistí sám
-    if [ -e /usr/share/apache2/apache2-maintscript-helper ]; then
-      . /usr/share/apache2/apache2-maintscript-helper
-      apache2_invoke enconf svx-dashboard.conf || true
-      apache2_invoke enmod proxy || true
-      apache2_invoke enmod proxy_http || true
-      apache2_invoke enmod expires || true
-    fi
-  ;;
+    configure|reconfigure)
+        # vytvořit /run a /var/log podle tmpfiles.d
+        if command -v systemd-tmpfiles >/dev/null 2>&1; then
+            systemd-tmpfiles --create >/dev/null 2>&1 || true
+        fi
+    ;;
 esac
 
 #DEBHELPER#
+
 exit 0
