@@ -1,0 +1,17 @@
+[Unit]
+Description=SVX Dashboard ELB backend daemon
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=svxlink
+Group=svxlink
+ExecStart=/usr/bin/env tclsh /usr/lib/svx-dashboard/elb_daemon.tcl
+Restart=on-failure
+RestartSec=3
+WorkingDirectory=/usr/lib/svx-dashboard
+EnvironmentFile=-/etc/svxlink/history.env
+
+[Install]
+WantedBy=multi-user.target

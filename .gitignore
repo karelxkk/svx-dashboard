@@ -1,26 +1,26 @@
-*.build
-*.buildinfo
-*.changes
-*.deb
-*.dsc
-*.debian.tar.*
-*.orig.tar.*
+# Debhelper build artefacts
 debian/.debhelper/
 debian/debhelper-build-stamp
 debian/files
-debian/tmp/
-debian/.debhelper/
-debian/svx-dashboard/
-debian/debhelper-build-stamp
-debian/files
-debian/*.debhelper
 debian/*.substvars
-svx-dashboard_*.orig.tar.*
-debian/upstream/signing-key.gpg
+debian/*.*.debhelper
+debian/svx-dashboard.debhelper.log
 
-debian/*/
-!debian/source/
-!debian/upstream/
-# výjimky pro zdrojové soubory
-!debian/*.*
-!debian/*/*.*
+# Now allow source files inside debian/
+!debian/*
+# Allow directories
+!debian/**/
+# Allow everything you maintain manually
+!debian/extra/**
+!debian/source/**
+!debian/upstream/**
+!debian/control
+!debian/rules
+!debian/changelog
+!debian/watch
+!debian/*.install
+!debian/*.links
+!debian/*.manpages
+!debian/*.tmpfiles
+!debian/*.lintian-overrides
+!debian/README.Debian
