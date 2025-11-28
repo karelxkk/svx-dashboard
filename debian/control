@@ -4,16 +4,15 @@ Priority: optional
 Maintainer: Karel Kadlec <xkk@post.cz>
 Build-Depends: debhelper-compat (= 13), dh-sequence-python3
 Standards-Version: 4.6.2
-Rules-Requires-Root: no
 Homepage: https://github.com/karelxkk/svx-dashboard
 Vcs-Git: https://github.com/karelxkk/svx-dashboard.git
 Vcs-Browser: https://github.com/karelxkk/svx-dashboard
 
 Package: svx-dashboard
 Architecture: all
-Depends: ${misc:Depends}, ${python3:Depends}, python3, svxlink-server, svxreflector, tcllib
+Depends: ${misc:Depends}, ${python3:Depends}, python3, svxlink-server, svxreflector, tcllib, tcl
 Recommends: apache2 | nginx
 Description: SvxLink dashboard with SSE streamer
  Simple dashboard for SvxLink and M17. Provides SSE event streamer, history
- rotate scripts, Apache/Nginx integration, SVXLink event hooks, tmpfiles.d,
- systemd services and ELB backend daemon.
+ rotation daemon, ELB backend, SVXLink event scripts, web files, tmpfiles
+ and optional Apache/Nginx integration.

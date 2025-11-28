@@ -1,5 +1,6 @@
 [Unit]
 Description=Rotate SVX history
+Documentation=https://github.com/karelxkk/svx-dashboard
 [Service]
 Type=oneshot
 User=svxlink

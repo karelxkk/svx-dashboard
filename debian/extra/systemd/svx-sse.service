@@ -1,5 +1,6 @@
 [Unit]
 Description=SVX SSE bridge
+Documentation=https://github.com/karelxkk/svx-dashboard
 After=network-online.target
 Wants=network-online.target
 

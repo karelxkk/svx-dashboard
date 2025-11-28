@@ -16,7 +16,7 @@ debian/extra/svxlink/svx_backend.tcl        etc/svxlink/events.d/
 debian/extra/svxlink/events.tcl             etc/svxlink/
 debian/extra/systemd/history.env            etc/svxlink/
 
-debian/extra/systemd/svx-sse.service            lib/systemd/system/
-debian/extra/systemd/svx-history-rotate.service lib/systemd/system/
-debian/extra/systemd/svx-history-rotate.timer   lib/systemd/system/
-debian/extra/systemd/elb-daemon.service         lib/systemd/system/
+debian/extra/systemd/svx-sse.service            usr/lib/systemd/system/
+debian/extra/systemd/svx-history-rotate.service usr/lib/systemd/system/
+debian/extra/systemd/svx-history-rotate.timer   usr/lib/systemd/system/
+debian/extra/systemd/elb-daemon.service         usr/lib/systemd/system/

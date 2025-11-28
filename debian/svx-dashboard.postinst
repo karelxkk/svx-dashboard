@@ -7,23 +7,6 @@ case "$1" in
         if command -v systemd-tmpfiles >/dev/null 2>&1; then
             systemd-tmpfiles --create >/dev/null 2>&1 || true
         fi
-
-        # informace pro uživatele o Apache snippetu
-        if [ -x /usr/sbin/a2enconf ]; then
-            cat << 'EOF'
-
-=== svx-dashboard Apache integration ===
-Configuration snippet has been installed as:
-  /etc/apache2/conf-available/svx-dashboard.conf
-
-To enable it, run:
-  sudo a2enconf svx-dashboard
-  sudo systemctl reload apache2
-
-If you use nginx instead of Apache, you can ignore this notice.
-
-EOF
-        fi
     ;;
 esac
 
