@@ -1,8 +1,0 @@
-#!/bin/sh
-set -e
-
-# All service handling is done automatically by debhelper.
-
-#DEBHELPER#
-
-exit 0
