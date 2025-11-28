@@ -1,4 +1,3 @@
-#!/usr/bin/env tclsh
 # /etc/svxlink/events.d/EchoLink.tcl
 # Role: předává EchoLink události do backendu ::SVX. Bez fallbacků. Chyby hlásí do svxlink.log.
 

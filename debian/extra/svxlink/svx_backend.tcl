@@ -1,5 +1,4 @@
-#!/usr/bin/env tclsh
-# 99_backend_csv.tcl — backend s CSV ulozistem a HTTP pull z reflektoru
+# svx_backend.tcl — backend s CSV ulozistem a HTTP pull z reflektoru
 # Komentare nepouzivaji slozene zavorky, aby nevadily TCL parseru v jinych kontextech
 
 # --- Load guard -----------------------------------------------------------
