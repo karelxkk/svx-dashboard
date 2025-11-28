@@ -1,56 +1,131 @@
-# SVX Dashboard
+# svx-dashboard
 
-Simple dashboard for SvxLink/M17. Static files are served under `/svx/`. The SSE stream is proxied at `/svx/events`. Runtime data live in `/run/svx/`. The package does **not** modify third‑party configs by default.
+Simple web dashboard for SvxLink and M17 with SSE backend, ELB backend, and SVXLink event scripts.
 
-## Requirements
-- Debian 12+
-- `python3`, `svxlink-server`, `svxreflector`
-- Web server: `apache2` or `nginx`
+## Installation using the official .deb package
 
-## Install from .deb
+The project provides an official Debian package `svx-dashboard_*.deb`.  
+It installs:
+
+- static web UI under `/usr/share/svx-dashboard/html/`
+- SSE backend (`svx-sse.service`)
+- ELB backend (`elb-daemon.service`)
+- history rotation timer (`svx-history-rotate.timer`)
+- SVXLink event hooks (`/etc/svxlink/events.d/…`)
+- Apache and Nginx configuration snippets
+- tmpfiles rules for `/run/svxlink` and history files
+
+### 1) Install the package
+
 ```bash
 sudo dpkg -i svx-dashboard_*.deb
-# Apache (optional)
-sudo a2enconf svx-dashboard && sudo a2enmod alias proxy proxy_http headers
-sudo apache2ctl -t && sudo apache2ctl -k graceful
-# Nginx (optional)
-echo 'include /etc/nginx/snippets/svx-dashboard.locations;' | sudo tee -a /etc/nginx/sites-available/default
-sudo nginx -t && sudo systemctl reload nginx
-# Services and runtime
-sudo systemd-tmpfiles --create
-sudo systemctl enable --now svx-sse.service svx-history-rotate.timer
+sudo apt-get -f install
 ```
 
-## SvxLink integration (manual)
-1. Ensure `[ReflectorLogic]` section exists in `/etc/svxlink/svxlink.conf`.
-2. In `[GLOBAL]` add:
-   ```ini
-   EVENT_HANDLER=/etc/svxlink/events-dashboard.tcl
-   ```
-3. Create `/etc/svxlink/events-dashboard.tcl` (or copy from examples):
-   ```tcl
-   if {[file exists "/etc/svxlink/events.d/svx_backend.tcl"]} { source /etc/svxlink/events.d/svx_backend.tcl }
-   if {[file exists "/etc/svxlink/events.d/EchoLink.tcl"]}    { source /etc/svxlink/events.d/EchoLink.tcl }
-   ```
-4. In `/etc/svxlink/svxreflector.conf` set in `[GLOBAL]`:
-   ```ini
-   HTTP_SRV_PORT=8880
-   ```
+### 2) (Optional) Enable Apache integration
 
-## Paths
-- Web root: `/var/www/svx/`
-- Runtime: `/run/svx/{status.json,history.csv}` (created by tmpfiles)
-- SSE daemon: `/usr/bin/svx_sse.py` (listens on 127.0.0.1:8890)
-- Apache conf: `/etc/apache2/conf-available/svx-dashboard.conf`
+A configuration snippet is installed into:
+
+```
+/etc/apache2/conf-available/svx-dashboard.conf
+```
+
+To enable it:
+
+```bash
+sudo a2enconf svx-dashboard
+sudo a2enmod alias proxy proxy_http headers
+sudo apache2ctl -t && sudo apache2ctl -k graceful
+```
+
+### 3) (Optional) Enable Nginx integration
+
+A snippet for Nginx is installed into:
+
+```
+/etc/nginx/snippets/svx-dashboard.locations
+```
+
+To enable it in your server block:
+
+```bash
+echo 'include /etc/nginx/snippets/svx-dashboard.locations;'   | sudo tee -a /etc/nginx/sites-available/default
+
+sudo nginx -t && sudo systemctl reload nginx
+```
+
+### 4) Start the backend services
+
+```bash
+sudo systemd-tmpfiles --create
+sudo systemctl enable --now svx-sse.service svx-history-rotate.timer elb-daemon.service
+```
+
+## SvxLink Integration
+
+Your SVXLink installation must load the event scripts provided by the package.
+
+### 1) In `/etc/svxlink/svxlink.conf`
+
+Ensure `[GLOBAL]` contains:
+
+```ini
+EVENT_HANDLER=/etc/svxlink/events.tcl
+```
+
+### 2) Provided event handlers
+
+These are installed automatically:
+
+```
+/etc/svxlink/events.tcl
+/etc/svxlink/events.d/svx_backend.tcl
+/etc/svxlink/events.d/svx_serial.tcl
+/etc/svxlink/events.d/svx_usrp.tcl
+/etc/svxlink/events.d/EchoLink.tcl
+```
+
+### 3) SvxReflector (optional)
+
+In `/etc/svxlink/svxreflector.conf`:
+
+```ini
+HTTP_SRV_PORT=8880
+```
+
+## Paths (installed by the .deb package)
+
+- Web UI: `/usr/share/svx-dashboard/html/`
+- Runtime state (tmpfiles): `/run/svxlink/{status.json,history.csv}`
+- SSE backend: `/usr/lib/svx-dashboard/svx_sse.py`
+- ELB backend: `/usr/lib/svx-dashboard/elb_daemon.tcl`
+- History rotation: `/usr/lib/svx-dashboard/svx_history_rotate.sh`
+- systemd units:
+  - `svx-sse.service`
+  - `svx-history-rotate.timer`
+  - `svx-history-rotate.service`
+  - `elb-daemon.service`
+- Apache config: `/etc/apache2/conf-available/svx-dashboard.conf`
 - Nginx snippet: `/etc/nginx/snippets/svx-dashboard.locations`
 
 ## Verification
+
 ```bash
 curl -I  http://127.0.0.1/svx/
-curl -iN http://127.0.0.1/svx/events | head -n2  # GET only; HEAD returns 501
+curl -iN http://127.0.0.1/svx/events | head -n2
 ```
 
 ## Troubleshooting
-- **404 /svx/**: missing content in `/var/www/svx` or conflicting `Alias /svx` elsewhere.
-- **503 or 501 /svx/events**: `svx-sse.service` not running, or using HEAD instead of GET.
-- Apache warning “ServerName”: `a2enconf servername && apache2ctl -t && apache2ctl -k graceful`.
+
+- **404 /svx/**  
+  Web server does not include the provided snippet.
+
+- **503 or empty SSE**  
+  `svx-sse.service` is not running or blocked by firewall.
+
+- **ELB backend not reporting**  
+  Check logs:  
+  `journalctl -u elb-daemon.service`
+
+- **Missing history.csv or status.json**  
+  Run: `sudo systemd-tmpfiles --create`
